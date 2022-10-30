@@ -1,20 +1,17 @@
-# Ultroid - UserBot
-# Copyright (C) 2021-2022 TeamUltroid
-# This file is a part of < https://github.com/TeamUltroid/Ultroid/ >
-# PLease read the GNU Affero General Public License in <https://www.github.com/TeamUltroid/Ultroid/blob/main/LICENSE/>.
+FROM python:3.9
 
-FROM theteamultroid/ultroid:main
+RUN apt update && apt upgrade -y
+RUN apt install python3-pip -y
+RUN apt install ffmpeg -y
 
-# set timezone
-ENV TZ=Asia/Kolkata
-RUN ln -snf /usr/share/zoneinfo/$TZ /etc/localtime && echo $TZ > /etc/timezone
+RUN curl -sL https://deb.nodesource.com/setup_16.x | bash -
+RUN apt-get install -y nodejs
+RUN npm i -g npm
 
-COPY installer.sh .
+RUN mkdir /app/
+COPY . /app
+WORKDIR /app
+RUN pip3 install --upgrade pip
+RUN pip3 install -U -r requirements.txt
 
-RUN bash installer.sh
-
-# changing workdir
-WORKDIR "/root/TeamUltroid"
-
-# start the bot.
 CMD ["bash", "startup"]
